@@ -27,6 +27,11 @@ public class Said {
 		return TimeUtils.formatMillis(duration, DAYS, SECONDS).trim();
 	}
 
+	public String since(long earlierTimeMillis) {
+		final long duration = when - earlierTimeMillis;
+		return TimeUtils.formatMillis(duration, DAYS, SECONDS).trim();
+	}
+
 	public static class Voice {
 
 		static Set<String> whos = new HashSet<String>();

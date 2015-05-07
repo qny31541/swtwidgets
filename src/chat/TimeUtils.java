@@ -11,12 +11,28 @@ import static java.util.concurrent.TimeUnit.*;
  */
 public class TimeUtils {
 
+	public static String date() {
+		return new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+	}
+
 	public static String dateTime() {
-		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
+		return date() + " " + time();
+	}
+
+	public static String time() {
+		return new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
 	}
 
 	public static String timeDate() {
-		return new SimpleDateFormat("HH:mm:ss dd-MM-yyyy").format(Calendar.getInstance().getTime());
+		return time() + " " + date();
+	}
+
+	public static String dateEnglish() {
+		return new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
+	}
+
+	public static String dateAmerican() {
+		return new SimpleDateFormat("MM-dd-yyyy").format(Calendar.getInstance().getTime());
 	}
 
 	/**

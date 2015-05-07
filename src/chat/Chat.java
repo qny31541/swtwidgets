@@ -48,7 +48,7 @@ public class Chat extends Composite {
 	final Voice us;
 
 	public Chat(final Voice us, Composite parent, int style) {
-		super(parent, style | SWT.BORDER);
+		super(parent, style);
 		
 		this.us = us;
 		
@@ -87,7 +87,7 @@ public class Chat extends Composite {
 
 	public void add(Said s) {
 		// add centred timestamp?
-		long maxGap = 1000;// * 60;
+		long maxGap = 1000 * 60;
 		if (said.isEmpty() || s.when - said.peekLast().when > maxGap) {
 			Label timeStamp = new Label(this, SWT.NONE);
 			timeStamp.setText(TimeUtils.timeDate());
@@ -100,14 +100,18 @@ public class Chat extends Composite {
 		said.add(s);
 		
 		render(s);
+		
+		last = s.when;
 	}
+
+	long last = -1;
 
 	public void render(Said s) {
 		Composite parent = this;
 		
 		boolean us = s.voice == this.us;
 		
-		Composite outer = new Composite(parent, SWT.BORDER);
+		Composite outer = new Composite(parent, SWT.NONE);
 		GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BEGINNING).grab(true, false).applyTo(outer);
 		singleColumn.copy().extendedMargins(0, us ? 40 : 0, 0, 0).applyTo(outer);
 		
@@ -135,14 +139,15 @@ public class Chat extends Composite {
 		GridLayoutFactory.swtDefaults().numColumns(2).margins(1, 1).applyTo(whoTimeDate);
 		Label who = new Label(whoTimeDate, SWT.NONE);
 		who.setText(s.who()); // only show for whoever isn't us
-//		if (timeStamp == null) {
+		if (last != -1 && s.when - last > 1000) {
 			Label when = new Label(whoTimeDate, SWT.NONE);
 //			when.setText(s.when() + " ago");
-			when.setText(TimeUtils.timeDate());
+//			when.setText(TimeUtils.timeDate());
+			when.setText(TimeUtils.time() + " (" + s.since(last) + " gap" + ")");
 			GridDataFactory.swtDefaults()
 					.align(SWT.END, SWT.BEGINNING) // at right (but for extended margins)
 					.grab(true, false).applyTo(when);
-//		}
+		}
 
 		
 		Composite what = classToCompositeFactoryMap.getFactory(s.what).create(s.what, entry, SWT.NONE);//SWT.BORDER);
